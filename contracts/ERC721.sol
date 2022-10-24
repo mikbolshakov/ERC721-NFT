@@ -4,9 +4,10 @@ pragma solidity ^0.8.0;
 import "./IERC721.sol";
 import "./IERC721Metadata.sol";
 import "./Strings.sol";
-import "./IERC721Receiver";
+import "./IERC721Receiver.sol";
+import "./ERC165.sol";
 
-contract ERC721 is IERC721, IERC721Metadata {
+contract ERC721 is ERC165, IERC721, IERC721Metadata {
     using Strings for uint;
     string private _name;
     string private _symbol;
@@ -29,15 +30,17 @@ contract ERC721 is IERC721, IERC721Metadata {
 
 
     function transferFrom(address from, address to, uint tokenId) external {
+      require(_isApprovedOrOwner(msg.sender, tokenId), "not approved or owner");
 
+      _transfer(from, to, tokenId);
     }
 
     function safeTransferFrom(address from, address to, uint tokenId) public {
       safeTransferFrom(from, to, tokenId, "");
     }
 
-    function safeTransferFrom(address from, address to, uint tokenId, bytes calldata data) public {
-      require(_isApprovedOrOwner(msg.msg.sender, tokenId), "not an owner!");
+    function safeTransferFrom(address from, address to, uint tokenId, bytes memory data) public {
+      require(_isApprovedOrOwner(msg.sender, tokenId), "not an owner!");
       _safeTransfer(from, to, tokenId, data);
     }
 
@@ -83,6 +86,12 @@ contract ERC721 is IERC721, IERC721Metadata {
 
     function isApprovedForAll(address owner, address operator) public view returns (bool) {
       return _operatorApprovals[owner][operator];
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns(bool) {
+      return interfaceId == type(IERC721).interfaceId ||
+        interfaceId == type(IERC721Metadata).interfaceId ||
+        super.supportsInterface(interfaceId);
     }
 
     function _safeMint(address to, uint tokenId) internal virtual {
@@ -132,7 +141,7 @@ contract ERC721 is IERC721, IERC721Metadata {
       return "";
     }
 
-    function tokenURI(uint tokenId) external view _requireMinted(tokenId) returns(string memory) {
+    function tokenURI(uint tokenId) public view virtual _requireMinted(tokenId) returns(string memory) {
       string memory baseURI = _baseURI();
 
       return bytes(baseURI).length > 0 ? 

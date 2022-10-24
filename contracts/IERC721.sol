@@ -24,4 +24,3 @@ interface IERC721 {
 
   function isApprovedForAll(address owner, address operator) external view returns (bool);
 }
-    
