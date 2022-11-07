@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./IERC721.sol";
 
+// дополнение к IERC721
 interface IERC721Metadata is IERC721 {
   function name() external view returns(string memory);
 

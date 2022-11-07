@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+// конвертация чисел в строку
 library Strings {
   function toString(uint256 value) internal pure returns(string memory) {
     if (value == 0) {
