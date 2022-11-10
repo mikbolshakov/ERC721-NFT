@@ -1,8 +1,7 @@
-import { HardhatUserConfig } from "hardhat/types";
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
-import "@nomiclabs/hardhat-waffle";
-import '@typechain/hardhat';
 
 const config: HardhatUserConfig = {
   solidity: "0.8.17",
